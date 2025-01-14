@@ -44,15 +44,22 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public boolean add(T element) {
-		// TODO: FILL THIS IN!
-		return false;
+
+		if (size >= array.length) {
+			array = makeBiggerArrayFrom(array);
+		}
+
+		array[size] = element;
+		size++;
+
+		return true;
 	}
 
 	@Override
 	public void add(int index, T element) {
-		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException();
-		}
+
+		validateIndex(index);
+
 		// add the element to get the resizing
 		add(element);
 
@@ -110,7 +117,13 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public int indexOf(Object target) {
-		// TODO: FILL THIS IN!
+
+		for (int i = 0; i < size; i++) {
+
+			if (equals(target, array[i])) return i;
+
+		}
+
 		return -1;
 	}
 
@@ -181,8 +194,15 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		// TODO: FILL THIS IN!
-		return null;
+
+		T element = get(index);
+
+		for (int i=index; i<size-1; i++) {
+			array[i] = array[i+1];
+		}
+		size--;
+
+		return element;
 	}
 
 	@Override
@@ -201,8 +221,12 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public T set(int index, T element) {
-		// TODO: FILL THIS IN!
-		return null;
+
+		T previous = get(index);
+
+		array[index] = element;
+
+		return previous;
 	}
 
 	@Override
@@ -227,5 +251,18 @@ public class MyArrayList<T> implements List<T> {
 	@Override
 	public <U> U[] toArray(U[] array) {
 		throw new UnsupportedOperationException();
+	}
+
+	private T[] makeBiggerArrayFrom(T[] array) {
+
+		T[] bigger = (T[]) new Object[array.length * 2];
+		System.arraycopy(array, 0, bigger, 0, array.length);
+		return bigger;
+	}
+
+	private void validateIndex(int index) {
+		if (index < 0 || index > size) {
+			throw new IndexOutOfBoundsException();
+		}
 	}
 }
