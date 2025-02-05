@@ -27,4 +27,19 @@ public class MyLinkedListTest extends MyArrayListTest {
 		mylist = new MyLinkedList<Integer>();
 		mylist.addAll(list);
 	}
+
+	@Override
+	public void testIndexOf() {
+		super.testIndexOf();
+	}
+
+	@Override
+	public void testAddIntT() {
+		super.testAddIntT();
+	}
+
+	@Override
+	public void testRemoveInt() {
+		super.testRemoveInt();
+	}
 }

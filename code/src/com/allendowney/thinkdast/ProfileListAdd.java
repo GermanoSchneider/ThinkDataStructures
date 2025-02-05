@@ -3,6 +3,8 @@ package com.allendowney.thinkdast;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.jfree.data.xy.XYSeries;
 
@@ -24,43 +26,33 @@ public class ProfileListAdd {
 	 * Characterize the run time of adding to the end of an ArrayList
 	 */
 	public static void profileArrayListAddEnd() {
-		Timeable timeable = new Timeable() {
-			List<String> list;
-
-			public void setup(int n) {
-				list = new ArrayList<String>();
-			}
-
-			public void timeMe(int n) {
-				for (int i=0; i<n; i++) {
-					list.add("a string");
-				}
-			}
-		};
-		int startN = 4000;
-		int endMillis = 1000;
-		runProfiler("ArrayList add end", timeable, startN, endMillis);
+		List<String> list = new ArrayList<>();
+		setUpProfile(list, list::add);
 	}
 	
 	/**
 	 * Characterize the run time of adding to the beginning of an ArrayList
 	 */
 	public static void profileArrayListAddBeginning() {
-		// TODO: FILL THIS IN!
+
+		List<String> list = new ArrayList<>();
+		setUpProfile(list, s -> list.add(0, s));
 	}
 
 	/**
 	 * Characterize the run time of adding to the beginning of a LinkedList
 	 */
 	public static void profileLinkedListAddBeginning() {
-		// TODO: FILL THIS IN!
+		List<String> list = new LinkedList<>();
+		setUpProfile(list, s -> list.add(0, s));
 	}
 
 	/**
 	 * Characterize the run time of adding to the end of a LinkedList
 	 */
 	public static void profileLinkedListAddEnd() {
-		// TODO: FILL THIS IN!
+		List<String> list = new LinkedList<>();
+		setUpProfile(list, list::add);
 	}
 
 	/**
@@ -75,4 +67,23 @@ public class ProfileListAdd {
 		XYSeries series = profiler.timingLoop(startN, endMillis);
 		profiler.plotResults(series);
 	}
+
+	private static void setUpProfile(List<String> list, Consumer<String> function) {
+
+		Timeable timeable = new Timeable() {
+
+			@Override
+			public void setup(int n) { }
+
+			public void timeMe(int n) {
+				for (int i=0; i<n; i++) {
+					function.accept("a string");
+				}
+			}
+		};
+		int startN = 4000;
+		int endMillis = 1000;
+		runProfiler("ArrayList add end", timeable, startN, endMillis);
+	}
+
 }
